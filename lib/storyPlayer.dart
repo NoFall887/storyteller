@@ -10,7 +10,7 @@ class StoryPlayer extends StatefulWidget {
 
 class _StoryPlayerState extends State<StoryPlayer> {
   late AssetsAudioPlayer player;
-  late var duration;
+  String? _duration;
   String? _nowPlaying;
 
   @override
@@ -20,6 +20,7 @@ class _StoryPlayerState extends State<StoryPlayer> {
     player.current.listen((playingAudio) {
       setState(() {
         _nowPlaying = playingAudio!.audio.assetAudioPath;
+        _duration = playingAudio.audio.duration.toString().split(".")[0];
       });
     });
 
@@ -61,7 +62,40 @@ class _StoryPlayerState extends State<StoryPlayer> {
   }
 
   Widget playbackTime() {
-    return Row();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        PlayerBuilder.currentPosition(
+          player: player,
+          builder: (context, position) {
+            return Text(
+              position.toString().split(".")[0],
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            );
+          },
+        ),
+        SizedBox(width: 20),
+        Text(
+          "|",
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        SizedBox(width: 20),
+        Text(
+          _duration != null ? "${_duration}" : "0:00:00",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget audioControl() {
