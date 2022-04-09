@@ -3,7 +3,7 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class StoryPlayer extends StatefulWidget {
-  StoryPlayer({Key? key}) : super(key: key);
+  const StoryPlayer({Key? key}) : super(key: key);
 
   @override
   State<StoryPlayer> createState() => _StoryPlayerState();
@@ -55,14 +55,14 @@ class _StoryPlayerState extends State<StoryPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return AudioPlayer();
+    return audioPlayer();
   }
 
-  Widget AudioPlayer() {
+  Widget audioPlayer() {
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
-          BoxShadow(
+          const BoxShadow(
             color: Colors.grey,
             blurRadius: 8,
           ),
@@ -70,18 +70,18 @@ class _StoryPlayerState extends State<StoryPlayer> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: EdgeInsets.all(30),
+      padding: const EdgeInsets.all(30),
       child: Column(
         children: [
-          AudioControlSlider(),
-          SizedBox(height: 30),
+          audioControlSlider(),
+          const SizedBox(height: 30),
           audioControl(),
         ],
       ),
     );
   }
 
-  Widget AudioControlSlider() {
+  Widget audioControlSlider() {
     return PlayerBuilder.currentPosition(
       player: player,
       builder: (context, position) {
@@ -91,7 +91,7 @@ class _StoryPlayerState extends State<StoryPlayer> {
           ),
           timeLabelPadding: 10,
           timeLabelLocation: TimeLabelLocation.above,
-          timeLabelTextStyle: TextStyle(
+          timeLabelTextStyle: const TextStyle(
               fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black),
           total: Duration(
             milliseconds: _duration == null ? 0 : _duration!.inMilliseconds,
@@ -116,7 +116,7 @@ class _StoryPlayerState extends State<StoryPlayer> {
                 _loopCount < 10 ? _loopCount++ : _loopCount = 0;
                 setState(() {});
               },
-              child: Icon(
+              child: const Icon(
                 Icons.loop_rounded,
                 size: 30,
               ),
@@ -134,8 +134,8 @@ class _StoryPlayerState extends State<StoryPlayer> {
                       : await player.playOrPause();
                 },
                 child: !isPlaying
-                    ? Icon(Icons.play_arrow_rounded, size: 45)
-                    : Icon(Icons.pause_rounded, size: 45),
+                    ? const Icon(Icons.play_arrow_rounded, size: 45)
+                    : const Icon(Icons.pause_rounded, size: 45),
               );
             }),
         AudioControlButton(
@@ -146,7 +146,7 @@ class _StoryPlayerState extends State<StoryPlayer> {
               _loopDone = 0;
             });
           },
-          child: Icon(Icons.stop_rounded, size: 40),
+          child: const Icon(Icons.stop_rounded, size: 40),
         )
       ],
     );
@@ -170,9 +170,9 @@ class AudioControlButton extends StatelessWidget {
       child: child,
       style: ButtonStyle(
         shape: MaterialStateProperty.all(
-          CircleBorder(),
+          const CircleBorder(),
         ),
-        padding: MaterialStateProperty.all(EdgeInsets.all(10)),
+        padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
       ),
     );
   }

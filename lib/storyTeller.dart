@@ -3,7 +3,7 @@ import 'package:storyteller/storyPlayer.dart';
 import 'package:storyteller/text.dart';
 
 class StoryTeller extends StatefulWidget {
-  StoryTeller({Key? key}) : super(key: key);
+  const StoryTeller({Key? key}) : super(key: key);
 
   @override
   State<StoryTeller> createState() => _StoryTellerState();
@@ -14,21 +14,28 @@ class _StoryTellerState extends State<StoryTeller> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Story Teller"),
+        title: const Text("Story Teller"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
           child: Column(
             children: [
               Text(
+                "Bawang putih dan Bawang Merah",
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Text(
                 StoryText.text,
                 textAlign: TextAlign.justify,
-                style: TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18),
               ),
-              SizedBox(height: 20),
-              StoryPlayer(),
+              const SizedBox(height: 20),
+              const StoryPlayer(),
             ],
           ),
         ),
