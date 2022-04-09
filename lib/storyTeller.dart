@@ -20,14 +20,12 @@ class _StoryTellerState extends State<StoryTeller> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-          // height: MediaQuery.of(context).size.height -
-          //       (MediaQuery.of(context).padding.top + kToolbarHeight),
           child: Column(
             children: [
               Text(
                 StoryText.text,
                 textAlign: TextAlign.justify,
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 18),
               ),
               SizedBox(height: 20),
               StoryPlayer(),

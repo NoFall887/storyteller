@@ -1,4 +1,5 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class StoryPlayer extends StatefulWidget {
@@ -10,8 +11,9 @@ class StoryPlayer extends StatefulWidget {
 
 class _StoryPlayerState extends State<StoryPlayer> {
   late AssetsAudioPlayer player;
-  String? _duration;
+  Duration? _duration;
   String? _nowPlaying;
+  int? _loopCount;
 
   @override
   void initState() {
@@ -20,7 +22,7 @@ class _StoryPlayerState extends State<StoryPlayer> {
     player.current.listen((playingAudio) {
       setState(() {
         _nowPlaying = playingAudio!.audio.assetAudioPath;
-        _duration = playingAudio.audio.duration.toString().split(".")[0];
+        _duration = playingAudio.audio.duration;
       });
     });
 
@@ -54,6 +56,8 @@ class _StoryPlayerState extends State<StoryPlayer> {
       child: Column(
         children: [
           playbackTime(),
+          SizedBox(height: 10),
+          AudioControlSlider(),
           SizedBox(height: 30),
           audioControl(),
         ],
@@ -63,7 +67,7 @@ class _StoryPlayerState extends State<StoryPlayer> {
 
   Widget playbackTime() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         PlayerBuilder.currentPosition(
@@ -88,13 +92,34 @@ class _StoryPlayerState extends State<StoryPlayer> {
         ),
         SizedBox(width: 20),
         Text(
-          _duration != null ? "${_duration}" : "0:00:00",
+          _duration != null
+              ? "${_duration.toString().split(".")[0]}"
+              : "0:00:00",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
           ),
         ),
       ],
+    );
+  }
+
+  Widget AudioControlSlider() {
+    return PlayerBuilder.currentPosition(
+      player: player,
+      builder: (context, position) {
+        return ProgressBar(
+          progress: Duration(
+            milliseconds: position.inMilliseconds,
+          ),
+          total: Duration(
+            milliseconds: _duration == null ? 0 : _duration!.inMilliseconds,
+          ),
+          onSeek: (duration) {
+            player.seekBy(duration);
+          },
+        );
+      },
     );
   }
 
