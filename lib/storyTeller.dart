@@ -22,11 +22,12 @@ class _StoryTellerState extends State<StoryTeller> {
           padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
           child: Column(
             children: [
-              Text(
+              const Text(
                 "Bawang putih dan Bawang Merah",
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Text(
