@@ -13,7 +13,12 @@ class _StoryPlayerState extends State<StoryPlayer> {
   late AssetsAudioPlayer player;
   Duration? _duration;
   String? _nowPlaying;
-  int? _loopCount;
+  int _loopCount = 0;
+  int _loopDone = 0;
+
+  _openAudioFile() {
+    player.open(Audio("assets/audio/bawang.mp3"));
+  }
 
   @override
   void initState() {
@@ -25,7 +30,20 @@ class _StoryPlayerState extends State<StoryPlayer> {
         _duration = playingAudio.audio.duration;
       });
     });
-
+    // execute when audio finished to play
+    player.playlistAudioFinished.listen((playing) {
+      if (_loopDone < _loopCount) {
+        setState(() {
+          _loopDone++;
+          player.play();
+        });
+      } else {
+        setState(() {
+          _loopCount = 0;
+          _loopDone = 0;
+        });
+      }
+    });
     super.initState();
   }
 
@@ -55,52 +73,11 @@ class _StoryPlayerState extends State<StoryPlayer> {
       padding: EdgeInsets.all(30),
       child: Column(
         children: [
-          playbackTime(),
-          SizedBox(height: 10),
           AudioControlSlider(),
           SizedBox(height: 30),
           audioControl(),
         ],
       ),
-    );
-  }
-
-  Widget playbackTime() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        PlayerBuilder.currentPosition(
-          player: player,
-          builder: (context, position) {
-            return Text(
-              position.toString().split(".")[0],
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            );
-          },
-        ),
-        SizedBox(width: 20),
-        Text(
-          "|",
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(width: 20),
-        Text(
-          _duration != null
-              ? "${_duration.toString().split(".")[0]}"
-              : "0:00:00",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
     );
   }
 
@@ -112,6 +89,10 @@ class _StoryPlayerState extends State<StoryPlayer> {
           progress: Duration(
             milliseconds: position.inMilliseconds,
           ),
+          timeLabelPadding: 10,
+          timeLabelLocation: TimeLabelLocation.above,
+          timeLabelTextStyle: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black),
           total: Duration(
             milliseconds: _duration == null ? 0 : _duration!.inMilliseconds,
           ),
@@ -128,13 +109,28 @@ class _StoryPlayerState extends State<StoryPlayer> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        Column(
+          children: [
+            AudioControlButton(
+              onPressed: () {
+                _loopCount < 10 ? _loopCount++ : _loopCount = 0;
+                setState(() {});
+              },
+              child: Icon(
+                Icons.loop_rounded,
+                size: 30,
+              ),
+            ),
+            Text("${_loopCount}X")
+          ],
+        ),
         PlayerBuilder.isPlaying(
             player: player,
             builder: (context, isPlaying) {
               return AudioControlButton(
                 onPressed: () async {
                   _nowPlaying == null
-                      ? await player.open(Audio("assets/audio/bawang.mp3"))
+                      ? await _openAudioFile()
                       : await player.playOrPause();
                 },
                 child: !isPlaying
@@ -145,6 +141,10 @@ class _StoryPlayerState extends State<StoryPlayer> {
         AudioControlButton(
           onPressed: () async {
             await player.stop();
+            setState(() {
+              _loopCount = 0;
+              _loopDone = 0;
+            });
           },
           child: Icon(Icons.stop_rounded, size: 40),
         )
